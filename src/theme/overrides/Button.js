@@ -15,11 +15,11 @@ export default function Button(theme) {
           height: 48,
         },
         contained: {
-          background: "#F9F9F9",
-          color: palette.common.black,
+          background: "#294dc3ff",
+          color: palette.common.white,
           fontSize: "18px",
           fontWeight: 700,
-          borderRadius: "40px",
+          borderRadius: "10px",
           minWidth: "230px",
           minHeight: "50px",
           "@media (max-width: 600px)": {

@@ -1,5 +1,6 @@
 import palette from "../palette";
 
+
 export default function TextField() {
   return {
     MuiTextField: {
@@ -29,6 +30,8 @@ export default function TextField() {
             },
             color: "black",
             fontSize: "14px",
+            marginTop:'5px',
+            height:'50px',
             borderRadius: "10px",
             "& ::placeholder": {
               color: "#03101B",

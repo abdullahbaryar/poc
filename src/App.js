@@ -7,10 +7,10 @@ import { updateBlocks } from "./store/slices/ledgerSlice";
 import DashboardLayout from "./layouts/DashboardLayout";
 
 // Pages
-import LandingPage from "./pages/auth/LandingPage"; 
-import LoginPage from "./pages/auth/LoginPage"; 
-import RegisterPage from "./pages/auth/RegisterPage"; 
-import OnboardingPage from "./pages/auth/OnboardingPage"; 
+import LandingPage from "./pages/auth/LandingPage";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+import OnboardingPage from "./pages/auth/OnboardingPage";
 
 import Dashboard from "./pages/Dashboard";
 import WalletPage from "./pages/user/WalletPage";
@@ -20,6 +20,7 @@ import PoRPage from "./pages/compliance/PoRPage";
 
 // Route Guard
 import ProtectedRoute from "./routes/ProtectedRoute";
+import KYCPage from "./pages/auth/KYCPage";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -43,6 +44,8 @@ export default function App() {
 
       {/* 3. Register Screen (Formik Form) */}
       <Route path="/register" element={<RegisterPage />} />
+
+      <Route path="/kyc" element={<KYCPage />} />
 
       {/* 4. Onboarding (Agar purana wala flow abhi bhi use ho raha hai) */}
       <Route path="/onboarding" element={<OnboardingPage />} />
