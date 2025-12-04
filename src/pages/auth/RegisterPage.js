@@ -283,6 +283,7 @@ export default function RegisterPage() {
                       onClick={() => navigate("/login")}
                       sx={{ fontWeight: "bold" }}
                     >
+                    
                       Login here
                     </Button>
                   </Typography>

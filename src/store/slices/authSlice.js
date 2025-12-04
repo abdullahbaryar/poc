@@ -4,6 +4,8 @@ const initialState = {
   isAuthenticated: false,
   user: null, // { name, role, walletAddress }
   loading: false,
+  logout: "",
+  token: "",
 };
 
 const authSlice = createSlice({
@@ -22,8 +24,15 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
     },
+    setLogOut(state, action) {
+      state.logout = action.payload;
+    },
+    setToken(state, action) {
+      state.logout = action.payload;
+    },
   },
 });
 
-export const { loginStart, loginSuccess, logout } = authSlice.actions;
+export const { loginStart, loginSuccess, logout, setLogOut, setToken } =
+  authSlice.actions;
 export default authSlice.reducer;
