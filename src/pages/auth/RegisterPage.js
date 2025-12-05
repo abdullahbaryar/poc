@@ -171,7 +171,7 @@ export default function RegisterPage() {
                       name="name"
                       placeholder="Enter Full Name"
                       fullWidth
-                      variant="outlined"
+                      // variant="outlined"
                       value={formik.values.name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}

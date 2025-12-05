@@ -139,7 +139,7 @@ export default function LoginPage() {
                     name="email"
                     placeholder="Enter Email"
                     fullWidth
-                    variant="outlined"
+                    // variant="outlined"
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -161,7 +161,7 @@ export default function LoginPage() {
                     placeholder="Enter Password"
                     type={showPassword ? "text" : "password"}
                     fullWidth
-                    variant="outlined"
+                    // variant="outlined"
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
