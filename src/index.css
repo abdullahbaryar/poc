@@ -2,64 +2,68 @@
   box-sizing: border-box;
 }
 html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "PoppinsRegular", sans-serif;
-  padding-right: 0 !important;
-  scroll-padding-top: 66px;
-  scroll-behavior: smooth;
-}
 
 code {
-  font-family: "PoppinsRegular";
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 
 @font-face {
-  font-family: "PoppinsBlack";
-  src: local("Poppins-Black"),
-    url("/src/assets/font/Poppins-Black.ttf") format("trueType");
+  font-family: "Poppins-Regular";
+  src: local("Poppins-Regular"),
+    url("./assets/fonts/Poppins-Regular.ttf") format("truetype");
 }
+
 @font-face {
-  font-family: "PoppinsBold";
+  font-family: "Poppins-Bold";
   src: local("Poppins-Bold"),
-    url("/src/assets/font/Poppins-Bold.ttf") format("trueType");
+    url("./assets/fonts/Poppins-Bold.ttf") format("truetype");
 }
 @font-face {
-  font-family: "Poppins-ExtraBold";
-  src: local("PoppinsExtraBold"),
-    url("/src/assets/font/Poppins-ExtraBold.ttf") format("trueType");
+  font-family: "Poppins-SemiBold";
+  src: local("Poppins-SemiBold"),
+    url("./assets/fonts/Poppins-SemiBold.ttf") format("truetype");
 }
+
 @font-face {
-  font-family: "PoppinsExtraLight";
-  src: local("Poppins-ExtraLight"),
-    url("/src/assets/font/Poppins-ExtraLight.ttf") format("trueType");
+  font-family: "Poppins-Medium";
+  src: local("Poppins-Medium"),
+    url("./assets/fonts/Poppins-Medium.ttf") format("trueType");
 }
+
 @font-face {
   font-family: "Poppins-Light";
-  src: local("PoppinsLight"),
-    url("/src/assets/font/Poppins-Light.ttf") format("trueType");
+  src: local("Poppins-Light"),
+    url("./assets/fonts/Poppins-Light.ttf") format("trueType");
 }
 @font-face {
-  font-family: "PoppinsMedium";
-  src: local("Poppins-Medium"),
-    url("/src/assets/font/Poppins-Medium.ttf") format("trueType");
-}
-@font-face {
-  font-family: "PoppinsRegular";
-  src: local("Poppins-Regular"),
-    url("/src/assets/font/Poppins-Regular.ttf") format("trueType");
-}
-@font-face {
-  font-family: "PoppinsSemiBold";
-  src: local("Poppins-SemiBold"),
-    url("/src/assets/font/Poppins-SemiBold.ttf") format("trueType");
-}
-@font-face {
-  font-family: "PoppinsThin";
+  font-family: "Poppins-Thin";
   src: local("Poppins-Thin"),
-    url("/src/assets/font/Poppins-Thin.ttf") format("trueType");
+    url("./assets/fonts/Poppins-Thin.ttf") format("trueType");
 }
+@font-face {
+  font-family: "Poppins-Italic";
+  src: local("Poppins-Italic"),
+    url("./assets/fonts/Poppins-Italic.ttf") format("trueType");
+}
+
+/* enhancment: Robot font */
+@font-face {
+  font-family: "Roboto-Regular";
+  src: local("Roboto-Regular"),
+    url("./assets/fonts/roboto/Roboto-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Roboto-Medium";
+  src: local("Roboto-Medium"),
+    url("./assets/fonts/roboto/Roboto-Medium.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Roboto-Bold";
+  src: local("Roboto-Bold"),
+    url("./assets/fonts/roboto/Roboto-Bold.ttf") format("truetype");
+}
+
 
 .css-ekqcaq-MuiButtonBase-root-MuiIconButton-root {
   border-radius: 10px !important;

@@ -5,12 +5,14 @@ import { updateBlocks } from "./store/slices/ledgerSlice";
 
 // Layouts
 import DashboardLayout from "./layouts/DashboardLayout";
+import UserLayout from "./layouts/UserLayout"; // <--- IMPORT NEW LAYOUT
 
 // Pages
 import LandingPage from "./pages/auth/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import OnboardingPage from "./pages/auth/OnboardingPage";
+import KYCPage from "./pages/auth/KYCPage";
 
 import Dashboard from "./pages/Dashboard";
 import WalletPage from "./pages/user/WalletPage";
@@ -20,7 +22,6 @@ import PoRPage from "./pages/compliance/PoRPage";
 
 // Route Guard
 import ProtectedRoute from "./routes/ProtectedRoute";
-import KYCPage from "./pages/auth/KYCPage";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -35,24 +36,26 @@ export default function App() {
   return (
     <Routes>
       {/* --- PUBLIC ROUTES --- */}
-
-      {/* 1. Entry Point: Role Selection Screen */}
       <Route path="/landing" element={<LandingPage />} />
-
-      {/* 2. Login Screen (Email/Password) */}
       <Route path="/login" element={<LoginPage />} />
-
-      {/* 3. Register Screen (Formik Form) */}
       <Route path="/register" element={<RegisterPage />} />
-
       <Route path="/kyc" element={<KYCPage />} />
-
-      {/* 4. Onboarding (Agar purana wala flow abhi bhi use ho raha hai) */}
       <Route path="/onboarding" element={<OnboardingPage />} />
 
-      {/* --- PROTECTED ROUTES (Casbin Secured) --- */}
+      {/* --- PROTECTED ROUTES --- */}
+
+      {/* GROUP 1: User Layout (Navbar wala Style) */}
+      {/* Sirf WalletPage is layout ko use karega */}
+      <Route element={<UserLayout />}>
+        <Route element={<ProtectedRoute resource="wallet" />}>
+          <Route path="/user" element={<WalletPage />} />
+        </Route>
+      </Route>
+
+      {/* GROUP 2: Standard Dashboard Layout (Sidebar wala Style) */}
+      {/* Baaki sab roles is purane layout ko use karenge */}
       <Route element={<DashboardLayout />}>
-        {/* Dashboard accessible by everyone */}
+        {/* Common Dashboard */}
         <Route element={<ProtectedRoute resource="dashboard" />}>
           <Route path="/" element={<Dashboard />} />
         </Route>
@@ -60,11 +63,6 @@ export default function App() {
         {/* Admin Only */}
         <Route element={<ProtectedRoute resource="issuance" />}>
           <Route path="/admin/issuance" element={<IssuancePage />} />
-        </Route>
-
-        {/* User Only */}
-        <Route element={<ProtectedRoute resource="wallet" />}>
-          <Route path="/user/wallet" element={<WalletPage />} />
         </Route>
 
         {/* Merchant Only */}
@@ -79,7 +77,6 @@ export default function App() {
       </Route>
 
       {/* --- FALLBACK --- */}
-      {/* Koi galat link dale to Landing Page par bhej do */}
       <Route path="*" element={<Navigate to="/landing" />} />
     </Routes>
   );

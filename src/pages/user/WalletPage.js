@@ -10,42 +10,34 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { transferFunds } from "../../store/slices/ledgerSlice";
 import toast from "react-hot-toast";
+import WalletCard from "../../components/WalletCard";
+import StyledTable from "../../components/StyledTable";
+import PageHeader from "../../components/PageHeader";
+import { headerright } from "../../assets/images";
+import SectionHeader from "../../components/SectionHeader";
+import SettleFundsModal from "../../components/modal/SettleFundsModal";
 
 export default function WalletPage() {
-  const [amount, setAmount] = useState(0);
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const balance = useSelector((state) => state.ledger.userBalance);
-
-  const handleSend = () => {
-    if (amount > balance) return toast.error("Insufficient funds");
-    dispatch(
-      transferFunds({ amount: Number(amount), from: user.name, to: "Merchant" })
-    );
-    toast.success("Transfer successful");
-  };
-
+  const [open, setOpen] = useState(false);
   return (
-    <Box maxWidth="sm">
-      <Card>
-        <CardContent>
-          <Typography variant="h5" gutterBottom>
-            Send sKRW
-          </Typography>
-          <Typography mb={2}>Balance: ₩{balance.toLocaleString()}</Typography>
-          <TextField
-            fullWidth
-            label="Amount"
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <Button variant="contained" fullWidth onClick={handleSend}>
-            Send Payment
-          </Button>
-        </CardContent>
-      </Card>
+    <Box>
+      <PageHeader
+        // title="KYC Verification"
+        // description="KYC verification is required to protect your account and enable full access to all features."
+      />
+      <Box sx={{ mt: "-120px" }}>
+        <WalletCard
+          balance="10,000,000"
+          currency="SKRW"
+          address="0xf1da98dd2716a243487f334345"
+          onSettle={() => setOpen(true)}
+          onReceive={() => alert("Receive clicked")}
+          onSend={() => alert("Send clicked")}
+        />
+      </Box>
+
+      <StyledTable />
+      <SettleFundsModal open={open} onClose={() => setOpen(false)} maxBalance={10000} />
     </Box>
   );
 }

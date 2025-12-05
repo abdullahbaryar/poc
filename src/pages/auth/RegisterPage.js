@@ -10,12 +10,15 @@ import {
   InputAdornment,
   IconButton,
   Grid,
+  Stack,
+  Link,
 } from "@mui/material";
 import {
   Store,
   PersonOutline,
   Visibility,
   VisibilityOff,
+  LockOutlined, // New Icon for Header
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -23,12 +26,45 @@ import { loginSuccess } from "../../store/slices/authSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import ViewSplashScreen from "./components/viewSplashScreen/ViewSplashScreen ";
+import { boxBottom, loginIcone } from "../../assets/images";
+import { registerUser } from "../../api/authApi";
+import { signUpValuesSchema } from "../../utils/validationSchemas";
+import { useMutation } from "@tanstack/react-query";
+// import ViewSplashScreen from "./components/viewSplashScreen/ViewSplashScreen "; // Isko direct styling se replace kiya hai image styling ke liye
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: registerUser,
+    onSuccess: (apiResponse) => {
+      console.log("Register Success Data:", apiResponse);
+
+      dispatch(
+        loginSuccess({
+          name: apiResponse.user?.name || "New User",
+          role: apiResponse.user?.role || "user",
+          email: apiResponse.user?.email,
+          token: apiResponse.token, // Token save karna zaroori hai
+          walletAddress: apiResponse.user?.walletAddress || "",
+        })
+      );
+
+      toast.success("Account created successfully!", {
+        position: "top-center",
+      });
+      navigate("/kyc"); // KYC page par bhejein
+    },
+    onError: (error) => {
+      console.error("Register Error:", error);
+      const errorMessage =
+        error?.response?.data?.message || "Registration failed!";
+      toast.error(errorMessage, { position: "top-center" });
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -38,69 +74,42 @@ export default function RegisterPage() {
       confirmPassword: "",
       type: "user",
     },
-    validationSchema: Yup.object({
-      name: Yup.string().required("Name is required"),
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      type: Yup.string().required("Account type is required"),
-      password: Yup.string()
-        .min(6, "Password must be at least 6 characters")
-        .required("Password is required"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password"), null], "Passwords must match")
-        .required("Confirm password is required"),
-    }),
+    validationSchema: signUpValuesSchema,
     onSubmit: (values) => {
-      console.log("Register Values:", values);
-      dispatch(
-        loginSuccess({
-          name: values.name,
-          role: values.type,
-          walletAddress: "0xNEW...USER",
-        })
-      );
-      navigate("/kyc");
+      const { confirmPassword, ...apiData } = values;
+      mutate(apiData);
     },
   });
 
   return (
     <Box className="fade-in">
-      {/* 1. Main Grid Container: Set height to 100vh on Desktop to lock the page */}
+      {/* 1. Main Grid Container */}
       <Grid
         container
         sx={{
-          height: { xs: "auto", md: "100vh" }, // Auto on mobile, Full height on Desktop
-          overflow: { xs: "auto", md: "hidden" }, // Hide main window scrollbar on Desktop
+          height: { xs: "auto", md: "100vh" },
+          overflow: { xs: "auto", md: "hidden" },
         }}
       >
-        {/* 2. Left Side (Static) */}
-        <Grid
-          item // Added item prop if using Grid v2
-          size={{ xs: 12, sm: 12, md: 6 }}
-          sx={{
-            height: "100%", // Fill the parent height
-            position: "relative",
-            // Ensure ViewSplashScreen fills this area
-          }}
-        >
-          <ViewSplashScreen
-            text="Support poc early, "
-            text2=" and be rewarded as they grow."
-          />
+        {/* 2. Left Side (Blue Background styling added here) */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <ViewSplashScreen />
         </Grid>
 
-        {/* 3. Right Side (Scrollable) */}
+        {/* 3. Right Side (Form) */}
         <Grid
-          item // Added item prop if using Grid v2
           size={{ xs: 12, sm: 12, md: 6 }}
           sx={{
-            height: "100%", // Match parent height
-            overflowY: { xs: "unset", md: "auto" }, // Enable scrollbar ONLY here on desktop
+            height: "100%",
+            overflowY: { xs: "unset", md: "auto" },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center", // Keeps the card centered vertically if content is short
+            justifyContent: "center",
+            backgroundColor: "#fff",
+            backgroundImage: `url(${boxBottom})`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "bottom right",
           }}
         >
           <Box
@@ -109,76 +118,81 @@ export default function RegisterPage() {
               display: "flex",
               justifyContent: "center",
               p: 2,
-              // Removed minHeight: 100vh here because the Grid parent handles the height now
             }}
           >
             <Card
               sx={{
-                maxWidth: 600,
+                maxWidth: 450, // Width thodi kam ki taaki clean lage
                 width: "100%",
-                borderRadius: 3,
                 p: 2,
-                my: 4,
+                // my: 1,
+                // boxShadow: "0px 10px 40px rgba(0,0,0,0.05)",
+                bgcolor: "white",
+                borderRadius: "20px",
+                boxShadow: "3px 5px 56px 0px #B6BACB26",
+                // mt: 30,
               }}
             >
               <CardContent>
-                <Box textAlign="center" mb={3}>
-                  <Typography variant="h4" sx={{ textAlign: "center" }}>
-                    Create Account
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Join ZenithCatena as a User or Merchant
-                  </Typography>
-                </Box>
+                {/* Header Icon & Text */}
+                {/* <Stack alignItems="center" spacing={2} mb={4}> */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "100%",
+                    }}
+                  >
+                    {/* Yahan Logo Icon use karein */}
+                    <img
+                      src={loginIcone}
+                      alt="loginIcone"
+                      width={50}
+                      height={50}
+                    />
+                  </Box>
+                  <Box textAlign="center">
+                    <Typography variant="h5" fontWeight="bold" color="#0047AB">
+                      Create Account
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" mt={1}>
+                      Join us in a few simple steps. Enter your details below to
+                      get started.
+                    </Typography>
+                  </Box>
+                {/* </Stack> */}
 
                 <form onSubmit={formik.handleSubmit}>
-                  <Box sx={{ minHeight: "95px" }}>
-                    <Typography>Account Type</Typography>
-                    <TextField
-                      select
-                      name="type"
-                      value={formik.values.type}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      fullWidth
-                      error={formik.touched.type && Boolean(formik.errors.type)}
-                      helperText={formik.touched.type && formik.errors.type}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            {formik.values.type === "merchant" ? (
-                              <Store />
-                            ) : (
-                              <PersonOutline />
-                            )}
-                          </InputAdornment>
-                        ),
-                      }}
-                    >
-                      <MenuItem value="user">Retail User</MenuItem>
-                      <MenuItem value="merchant">Merchant</MenuItem>
-                    </TextField>
-                  </Box>
-
-                  <Box sx={{ minHeight: "95px" }}>
-                    <Typography>Full Name</Typography>
+                  {/* Name Field */}
+                  <Box sx={{ mb: 2 }}>
+                    <Typography>Name</Typography>
                     <TextField
                       name="name"
-                      placeholder="Full Name"
+                      placeholder="Enter Full Name"
                       fullWidth
+                      variant="outlined"
                       value={formik.values.name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.name && Boolean(formik.errors.name)}
                       helperText={formik.touched.name && formik.errors.name}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "10px",
+                          backgroundColor: "#F9FAFB",
+                          "& fieldset": { borderColor: "#E5E7EB" },
+                        },
+                      }}
                     />
                   </Box>
 
-                  <Box sx={{ minHeight: "95px" }}>
+                  {/* Email Field */}
+                  <Box sx={{ mb: 2 }}>
                     <Typography>Email</Typography>
                     <TextField
                       name="email"
-                      placeholder="Email"
+                      placeholder="Enter Email"
                       fullWidth
                       value={formik.values.email}
                       onChange={formik.handleChange}
@@ -187,14 +201,45 @@ export default function RegisterPage() {
                         formik.touched.email && Boolean(formik.errors.email)
                       }
                       helperText={formik.touched.email && formik.errors.email}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "10px",
+                          backgroundColor: "#F9FAFB",
+                          "& fieldset": { borderColor: "#E5E7EB" },
+                        },
+                      }}
                     />
                   </Box>
 
-                  <Box sx={{ minHeight: "95px" }}>
+                  {/* Account Type */}
+                  <Box sx={{ mb: 2 }}>
+                    <Typography>Account Type</Typography>
+                    <TextField
+                      select
+                      name="type"
+                      fullWidth
+                      value={formik.values.type}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "10px",
+                          backgroundColor: "#F9FAFB",
+                          "& fieldset": { borderColor: "#E5E7EB" },
+                        },
+                      }}
+                    >
+                      <MenuItem value="user">Retail User</MenuItem>
+                      <MenuItem value="merchant">Merchant</MenuItem>
+                    </TextField>
+                  </Box>
+
+                  {/* Password */}
+                  <Box sx={{ mb: 2 }}>
                     <Typography>Password</Typography>
                     <TextField
                       name="password"
-                      placeholder="password"
+                      placeholder="Enter Password"
                       type={showPassword ? "text" : "password"}
                       fullWidth
                       value={formik.values.password}
@@ -207,6 +252,13 @@ export default function RegisterPage() {
                       helperText={
                         formik.touched.password && formik.errors.password
                       }
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "10px",
+                          backgroundColor: "#F9FAFB",
+                          "& fieldset": { borderColor: "#E5E7EB" },
+                        },
+                      }}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
@@ -225,11 +277,12 @@ export default function RegisterPage() {
                     />
                   </Box>
 
-                  <Box sx={{ minHeight: "95px" }}>
+                  {/* Confirm Password */}
+                  <Box sx={{ mb: 3 }}>
                     <Typography>Confirm Password</Typography>
                     <TextField
                       name="confirmPassword"
-                      placeholder="Confirm Password"
+                      placeholder="Enter Confirm Password"
                       type={showConfirmPassword ? "text" : "password"}
                       fullWidth
                       value={formik.values.confirmPassword}
@@ -243,6 +296,13 @@ export default function RegisterPage() {
                         formik.touched.confirmPassword &&
                         formik.errors.confirmPassword
                       }
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: "10px",
+                          backgroundColor: "#F9FAFB",
+                          "& fieldset": { borderColor: "#E5E7EB" },
+                        },
+                      }}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
@@ -268,24 +328,34 @@ export default function RegisterPage() {
                     variant="contained"
                     size="large"
                     fullWidth
-                    sx={{ mt: 2, py: 1.5, fontSize: "1rem" }}
+                    sx={{
+                      py: 1.5,
+                      bgcolor: "#0047AB",
+                      borderRadius: "10px",
+                      textTransform: "none",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                    }}
                   >
-                    Register & Continue
+                    Sign Up
                   </Button>
                 </form>
 
                 <Box mt={3} textAlign="center">
-                  <Typography variant="body2">
+                  <Typography variant="body2" color="text.secondary">
                     Already have an account?{" "}
-                    <Button
-                      variant="text"
-                      size="small"
+                    <Link
+                      component="button"
+                      variant="body2"
                       onClick={() => navigate("/login")}
-                      sx={{ fontWeight: "bold" }}
+                      sx={{
+                        fontWeight: "bold",
+                        textDecoration: "none",
+                        color: "#0047AB",
+                      }}
                     >
-                    
-                      Login here
-                    </Button>
+                      Sign In
+                    </Link>
                   </Typography>
                 </Box>
               </CardContent>

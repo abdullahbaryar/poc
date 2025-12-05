@@ -9,6 +9,8 @@ const PRIMARY = {
   light: "linear-gradient(251.38deg, #4D64C0 10%, #060B1F 99.76%)",
   main: "#2065D1",
   dark: "#17181A",
+  gray: "#F1F3F9",
+  darkgray: "#1E1E1E",
 };
 
 const SECONDARY = {

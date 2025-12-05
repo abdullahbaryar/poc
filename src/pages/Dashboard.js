@@ -18,6 +18,8 @@ import StoreIcon from "@mui/icons-material/Store";
 
 // Component
 import NetworkTopology from "../components/dashboard/NetworkTopology";
+import StyledTable from "../components/StyledTable";
+import WalletCard from "../components/WalletCard";
 
 // --- STYLED STAT CARD ---
 const StatCard = ({ title, value, icon, color = "primary" }) => (
@@ -66,6 +68,15 @@ export default function Dashboard() {
 
   return (
     <Box sx={{ width: "100%", pb: 5 }}>
+      <WalletCard
+        balance="10,000,000"
+        currency="SKRW"
+        address="0xf1da98dd2716a243487f334345"
+        onSettle={() => alert("Settle clicked")}
+        onReceive={() => alert("Receive clicked")}
+        onSend={() => alert("Send clicked")}
+      />
+      <StyledTable />
       <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold" }}>
         Hi, {name?.split(" ")[0]} 👋
       </Typography>

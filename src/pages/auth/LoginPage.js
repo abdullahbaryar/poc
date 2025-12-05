@@ -22,19 +22,41 @@ import { loginSuccess } from "../../store/slices/authSlice";
 import { logInUser } from "../../api/authApi";
 import { LoginValuesSchema } from "../../utils/validationSchemas";
 import ViewSplashScreen from "./components/viewSplashScreen/ViewSplashScreen "; // Ensure path is correct
+import { boxBottom, loginIcone } from "../../assets/images";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
-  const { mutate } = useMutation(logInUser, {
-    onSuccess: (data) => {
-      navigate("/");
+  const { mutate, isPending } = useMutation({
+    mutationFn: logInUser,
+    onSuccess: (apiResponse) => {
+      // API se response ane par yahan ayega
+      console.log("Login Success Data:", apiResponse);
+
+      // 2. Redux Store update karein (Real Data ke sath)
+      // Note: Make sure apiResponse ka structure backend se match kare
+      dispatch(
+        loginSuccess({
+          name: apiResponse.user?.name || "User",
+          role: apiResponse.user?.role || "user",
+          email: apiResponse.user?.email,
+          token: apiResponse.token,
+          walletAddress: apiResponse.user?.walletAddress || "",
+        })
+      );
+
+      // 3. Navigate & Toast
       toast.success("Sign-in successful", { position: "top-center" });
+      navigate("/");
     },
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
+      // Error handling
+      console.error("Login Error:", error);
+      const errorMessage =
+        error?.response?.data?.message || "Invalid credentials!";
+      toast.error(errorMessage, { position: "top-center" });
     },
   });
 
@@ -43,16 +65,6 @@ export default function LoginPage() {
     validationSchema: LoginValuesSchema,
     onSubmit: (values) => {
       mutate(values);
-      // Mock logic for role (remove/adjust as needed)
-      let role = "user";
-      if (values.email.includes("admin")) role = "admin";
-      dispatch(
-        loginSuccess({
-          name: values.email.split("@")[0],
-          role: role,
-          walletAddress: "0x123...ABC",
-        })
-      );
     },
   });
 
@@ -60,12 +72,12 @@ export default function LoginPage() {
     <Box sx={{ minHeight: "100vh", overflow: "hidden" }}>
       <Grid container sx={{ minHeight: "100vh" }}>
         {/* Left Side (Blue Screen) */}
-        <Grid item xs={12} md={6} sx={{ p: 0 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <ViewSplashScreen />
         </Grid>
 
         {/* Right Side (Form) */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Box
             sx={{
               height: "100%",
@@ -74,25 +86,39 @@ export default function LoginPage() {
               justifyContent: "center",
               p: 4,
               backgroundColor: "#fff",
+              backgroundImage: `url(${boxBottom})`,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "bottom right",
             }}
           >
-            <Box sx={{ width: "100%", maxWidth: 400 }}>
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: 450,
+                bgcolor: "white",
+                borderRadius: "20px",
+                boxShadow: "3px 5px 56px 0px #B6BACB26",
+                p: 5,
+                mx: "auto",
+              }}
+            >
               {/* Header Icon & Text */}
-              <Stack alignItems="center" spacing={2} mb={5}>
+              {/* <Stack alignItems="center" spacing={2} mb={3}> */}
                 <Box
                   sx={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: "50%",
-                    bgcolor: "#0047AB",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "white",
+                    width:'100%'
                   }}
                 >
                   {/* Yahan Logo Icon use karein */}
-                  <LockOutlined />
+                  <img
+                    src={loginIcone}
+                    alt="loginIcone"
+                    width={50}
+                    height={50}
+                  />
                 </Box>
                 <Box textAlign="center">
                   <Typography variant="h5" fontWeight="bold" color="#0047AB">
@@ -103,18 +129,12 @@ export default function LoginPage() {
                     off.
                   </Typography>
                 </Box>
-              </Stack>
+              {/* </Stack> */}
 
               {/* Form */}
               <form onSubmit={formik.handleSubmit}>
                 <Box sx={{ mb: 3 }}>
-                  <Typography
-                    variant="subtitle2"
-                    fontWeight="bold"
-                    sx={{ mb: 1 }}
-                  >
-                    Email
-                  </Typography>
+                  <Typography>Email</Typography>
                   <TextField
                     name="email"
                     placeholder="Enter Email"
@@ -135,13 +155,7 @@ export default function LoginPage() {
                 </Box>
 
                 <Box sx={{ mb: 4 }}>
-                  <Typography
-                    variant="subtitle2"
-                    fontWeight="bold"
-                    sx={{ mb: 1 }}
-                  >
-                    Password
-                  </Typography>
+                  <Typography>Password</Typography>
                   <TextField
                     name="password"
                     placeholder="Enter Password"
@@ -192,7 +206,7 @@ export default function LoginPage() {
                     "&:hover": { bgcolor: "#003380" },
                   }}
                 >
-                  Sign Up
+                  Sign In
                 </Button>
               </form>
 
@@ -203,14 +217,14 @@ export default function LoginPage() {
                   <Link
                     component="button"
                     variant="body2"
-                    onClick={() => navigate("/login")} // Image me ye text 'Sign In' hai, shayad flow different ho
+                    onClick={() => navigate("/register")} // Image me ye text 'Sign In' hai, shayad flow different ho
                     sx={{
                       fontWeight: "bold",
                       textDecoration: "none",
                       color: "#0047AB",
                     }}
                   >
-                    Sign In
+                    Sign Up
                   </Link>
                 </Typography>
               </Box>

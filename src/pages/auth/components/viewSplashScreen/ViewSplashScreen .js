@@ -1,9 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-// Aap apni image yahan import karein
-// import HeroImage from "../../assets/hero-image.png";
+import { boxTop, ViewSplashScreenIcone } from "../../../../assets/images";
 
 const ViewSplashScreen = () => {
   const navigate = useNavigate();
@@ -13,7 +11,10 @@ const ViewSplashScreen = () => {
       sx={{
         height: "100%",
         minHeight: "100vh",
-        backgroundColor: "#0047AB", // Screenshot wala Blue color
+        backgroundColor: "#013EB7",
+        backgroundImage: `url(${boxTop})`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "top left",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -23,26 +24,9 @@ const ViewSplashScreen = () => {
         p: 4,
       }}
     >
-      {/* Top Left Logo (Optional) */}
-      <Box
-        onClick={() => navigate("/")}
-        sx={{
-          position: "absolute",
-          top: 30,
-          left: 30,
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-      >
-        {/* Yahan Logo lagayen */}
-        LOGO
-      </Box>
-
-      {/* Main Illustration Image */}
       <Box sx={{ width: "80%", maxWidth: "400px", mb: 4 }}>
-        {/* Image source yahan lagayein */}
         <img
-          src="https://via.placeholder.com/400x300?text=Illustration"
+          src={ViewSplashScreenIcone}
           alt="Hero"
           style={{ width: "100%", height: "auto" }}
         />
@@ -50,12 +34,17 @@ const ViewSplashScreen = () => {
 
       {/* Text Section */}
       <Box sx={{ textAlign: "center" }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2 }}>
+        <Typography variant="h4" sx={{ textAlign: "center", color: "#fff",mb:1 }}>
           Welcome To Bank POC
         </Typography>
         <Typography
           variant="body1"
-          sx={{ opacity: 0.8, maxWidth: "400px", margin: "0 auto" }}
+          sx={{
+            opacity: 0.8,
+            maxWidth: "400px",
+            margin: "0 auto",
+            color: "#fff",
+          }}
         >
           Welcome to Bank POS — let's get you started quickly and smoothly
         </Typography>
